@@ -1,0 +1,23 @@
+{% extends 'partials/base.html'%}
+{% load crispy_forms_tags %}
+
+{% block title%} Shipping Information Page {% endblock%}
+
+
+{% block content%}
+    <div class="row mt-4 pt-4">
+        <div  class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="">Shipping Information </h1>
+                    <hr>
+                    <form method="POST">
+                        {%csrf_token%}
+                        {{sh_f|crispy}}
+                        <input type="submit" value="Next">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+  {% endblock %}

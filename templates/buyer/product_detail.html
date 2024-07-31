@@ -1,0 +1,43 @@
+{% extends 'partials/base.html'%}
+{% block title %} Product Detail Page {% endblock %}
+{% block TagLinksBar %}
+    <!-- Tag Links Bar -->
+    <div class="tag-links bg-secondary">
+        <a href="{% url 'buyer-index' %}" class="tag-link btn btn-light btn-sm">all</a>
+      {% for tag in tags %}
+        <a href="{% url 'category' tag.id %}" class="tag-link btn btn-light btn-sm">{{tag.name}}</a>
+        <!-- Add more tag links as needed -->
+        {% endfor %}
+      </div>
+{% endblock%}
+
+{% block content%}
+    <div class="row mt-4 pt-4">
+      <div  class="col-md-8 offset-md-2">
+        <div class="card shadow">
+            <div class="card-body">
+                <div class="row">
+                  <div class="col-md-4">
+                    <img class="img-thumbnail" src="{{product.image.url}}" alt="Product Image">
+                  </div>
+                  
+                  <div class="col-md-8">
+                    <h5>{{product.title}}</h5>
+                    <p>{{product.description}}</p>
+                    {% for tag in product.tag.all %}
+                      <li>{{ tag.name }}</li>
+                    {% endfor %}
+                    <p class="font-weight-bold">${{product.price}}</p>
+                    {% for i in quantity%}
+                        {% if i.user == request.user and i.product == product %}
+                          <p>quantity : {{ i.quantity }}</p>
+                        {% endif%}
+                    {% endfor%}
+                    <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary">Add to Cart</a>
+                  </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}

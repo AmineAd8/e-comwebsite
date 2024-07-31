@@ -1,0 +1,80 @@
+{% extends 'partials/base.html'%}
+{% load crispy_forms_tags %}
+
+{% block title%} Order Page {% endblock%}
+
+
+{% block content%}
+    <div class="row mt-4 pt-4">
+        <div  class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-body">
+                <span class="h4 text-primary">Profile Page</span>
+                <span>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary btn-sm float-right" data-toggle="modal" data-target="#exampleModal">
+                        Edite Profile
+                    </button>
+                </span>
+                <hr>
+                   
+                <div class="row">
+                    <div class="col-md-12">
+                    <h2 class="text-primary">Shipping Informations</h2>
+                    <div class="card">
+                        <div class="card-body">
+                            
+                            <h5>name:  {{shipping_info.name}}</h5>
+                            <h5>lastname: {{shipping_info.lastname}}</h5>
+                            <h5>email: {{shipping_info.email}}</h5>
+                            <h5>number:  {{shipping_info.number}}</h5>
+                            <h5>country:  {{shipping_info.country}}</h5>
+                            <h5>city: {{shipping_info.city}}</h5>
+                            <h5>address1: {{shipping_info.adress1}}</h5>
+                            <h5>address2: {{shipping_info.adress2}}</h5> 
+                            <h5>zip address: {{shipping_info.zip_address}}</h5>
+                        </div>
+                    </div>
+                    <h2 class="text-primary">Products</h2>
+                    {% for product in user.cartmodel.product.all %}
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <div class="row">
+                            <div class="col-md-4">
+                                <img  class="img-thumbnail" src="{{product.image.url}}" alt="Product Image">
+                            </div>
+                            <div class="col-md-8">
+                                <h5>{{product.title}}</h5>
+                                                    
+                                    {% for i in quantity %}
+                                        {% if i.user == request.user and i.product == product %}
+                                            <p>quantity: {{i.quantity}}</p>
+                                        {% endif %}
+                                    {% endfor %}
+                                       
+                                    <p class="font-weight-bold">${{product.price}}</p>           
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor%}
+                    <h3>Total : {{request.user.cartmodel.total_price}}$</h3>
+                    <form method="POST">
+                        {%csrf_token%}
+                        {{order|crispy}}
+                        <input class="btn btn-primary" type="submit" value="Order">
+                    </form>
+                    </div>
+                </div>
+                 
+                </div>
+            </div>
+         </div>
+        </div>
+    </div>
+
+
+
+  
+
+  {% endblock %}

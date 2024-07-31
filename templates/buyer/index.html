@@ -1,0 +1,64 @@
+{% extends 'partials/base.html'%}
+{% block title %} Index Page {% endblock %}
+
+{% block TagLinksBar %}
+    <!-- Tag Links Bar -->
+    <div class="tag-links bg-secondary">
+        <button class="tag btn btn-light btn-sm">all</button>
+      {% for tag in tags %}
+        <button class="tag btn btn-light btn-sm">{{tag.name}}</button>
+        
+        {% endfor %}
+      </div>
+{% endblock%}
+
+
+{% block content%}
+    <div class="row">
+      <!-- Product Cards -->
+      {% for i in range %}
+        {% for product in products %}
+        <div class="products col-md-4">
+          <div class="product-card">
+            <img class="img-thumbnail" src="{{product.image.url}}" alt="Product Image">
+            <h5>{{product.title}}</h5>
+            <p>{{product.description}}</p>
+            <div class="product-tag">
+              {% for tag in product.tag.all %}
+                      <li class="hide">{{ tag.name }}</li>
+              {% endfor %}
+            </div>
+            <p class="font-weight-bold">${{product.price}}</p>
+            <a href="{% url 'product_detail' product.id %}" class="btn btn-primary">View Product</a>
+            
+          </div>
+        </div>
+        {% endfor %}
+      {% endfor %}
+      
+    </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', () =>{
+        const tags = document.querySelectorAll('.tag');
+        const product_tag = document.querySelectorAll('.product-tag');
+        const products = document.querySelectorAll('.products');
+
+
+        function Filter(e){
+          const value = e.target.textContent.toLowerCase();
+          products.forEach(item => {
+            if (value == 'all'){
+              item.classList.remove('hide');
+              console.log(value);
+            }
+            else{
+              const isvalid = item.textContent.toLocaleLowerCase().includes(value);
+              item.classList.toggle('hide', !isvalid);
+              console.log(value);
+            }
+          });
+        }
+        tags.forEach(tag => tag.addEventListener('click', Filter));
+      })
+    </script>
+{% endblock %}

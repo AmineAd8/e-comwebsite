@@ -1,0 +1,76 @@
+{% extends 'partials/base.html'%}
+{% block title %} Cart Page {% endblock%}
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+
+{% block content%}
+    
+    <div class="row mt-4 pt-4">
+        
+        <div  class="col-md-8 offset-md-2">  
+          <H1>Shopping Cart</H1><hr>
+          <div style="margin-top:75px;" class="row">
+            {% if request.user.cartmodel.product_count == 0 %}
+            <div class="col">
+              <div class="row">
+                <img  src="/media/cart.png" class="d-block mx-auto" alt="img">
+              </div>
+              <div class="row justify-content-center">
+                <p style="font-size: 17px;" class="text-center">you don't have any items in your cart</p>
+              </div>
+            </div>
+            
+            
+            {% else %}
+            <div class="col-md-3">
+              <H3>Total: ${{price}}</H3> 
+            </div>
+            <div class="col-md-4">
+              <a class="btn btn-info btn-sm" href="{% url 'checkout' %}">checkout</a>
+            </div>
+            {% endif%}
+            
+          </div>
+         
+        {% for product in cart.product.all %}
+        <div class="card mb-2">
+            <div class="card-body">
+                <div class="row">
+                  <div class="col-md-4">
+                    <img  class="img-thumbnail" src="{{product.image.url}}" alt="Product Image">
+                  </div>
+                  
+                  <div class="col-md-8">
+                    <h5>{{product.title}}</h5>
+                    <p>{{product.description}}</p>
+                    {% for tag in product.tag.all %}
+                      <p>#{{ tag.name }}</p>
+                    {% endfor %}
+                    <p class="font-weight-bold">${{product.price}}</p>
+
+                    <form id="quantity_form" method="post" action="{% url 'update_quantity' product.id %}">
+                      {% csrf_token %}
+                      <div style="width: 50%; margin-bottom: 10px;" class="row">
+                        <div class="col">
+                            <label for="quantity_input">Quantity:</label>
+                        </div>
+                        <div class="col">                     
+                            {% for i in quantity %}
+                                {% if i.user == request.user and i.product == product %}
+                                    <input id="quantity_input" type="number" name="quantity" value="{{ i.quantity }}" min="1" class="form-control" required>
+                                {% endif %}
+                            {% endfor %}
+                        </div>                
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                    <a href="{% url 'remove_form_cart' product.id %}" class="btn btn-danger btn-sm">remove</a>
+                  </form>
+
+                  </div>
+                </div>
+            </div>
+        </div>
+        {% endfor%}
+        </div>
+    </div>
+{% endblock %}
