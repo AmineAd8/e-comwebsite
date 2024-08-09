@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "crispy_forms",
     "crispy_bootstrap4",
+    'paypal.standard.ipn',
 ]
 
 MIDDLEWARE = [
@@ -148,3 +149,9 @@ EMAIL_HOST_USER = 'blogapp767@gmail.com'
 EMAIL_HOST_PASSWORD = 'acig rujg jtwe wmst'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+
+
+# using the sandbox 
+PAYPAL_TEST = True
+
+PAYPAL_RECEIVER_EMAIL = "mybusiness2test@business.com"

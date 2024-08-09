@@ -1,0 +1,56 @@
+{% extends 'partials/base.html'%}
+{% load crispy_forms_tags %}
+
+{% block title%} Order Page {% endblock%}
+
+
+{% block content%}
+    <div class="row mt-4 pt-4">
+        <div  class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h2 class="text-primary">Pay now</h2>
+                            <hr>
+                            <h2 class="text-primary">Products</h2>
+                            {% for product in user.cartmodel.product.all %}
+                            <div class="card mb-2">
+                                <div class="card-body">
+                                    <div class="row">
+                                    <div class="col-md-4">
+                                        <img  class="img-thumbnail" src="{{product.image.url}}" alt="Product Image">
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5>{{product.title}}</h5>
+                                                            
+                                            {% for i in quantity %}
+                                                {% if i.user == request.user and i.product == product %}
+                                                    <p>quantity: {{i.quantity}}</p>
+                                                {% endif %}
+                                            {% endfor %}
+                                            
+                                            <p class="font-weight-bold">${{product.price}}</p>           
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor%}
+                            <h3>Total : {{request.user.cartmodel.total_price}}$</h3>
+                            <br>
+                            <center>
+                                {{form.render}}
+                            </center> 
+                            <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+  
+
+  {% endblock %}
