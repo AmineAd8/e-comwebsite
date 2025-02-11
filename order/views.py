@@ -61,7 +61,6 @@ def checkout(request):
     if request.method == 'POST':
         shipping_form = ShippingForm(request.POST)
         if shipping_form.is_valid():
-            # save the shipping information
             instance = shipping_form.save(commit=False)
             instance.user = request.user
             instance.save()
@@ -80,8 +79,18 @@ def order(request, pk):
     shipping_infomation = ShippingInformation.objects.get(id=pk)
     quantity = Quantity.objects.all()
     cart = CartModel.objects.get(user=request.user)
-    
-    if request.method == 'POST':
+    host = request.get_host()
+    paypal_dict = {
+        "business": settings.PAYPAL_RECEIVER_EMAIL,
+        "amount": cart.total_price(),
+        "item_name": "Product",
+        "invoice": str(uuid.uuid4()),
+        "notify_url": 'http://{}{}'.format(host, reverse('paypal-ipn')),
+        "return_url": 'http://{}{}'.format(host, reverse('payment_success', args=[pk])),
+        "cancel_return": 'http://{}{}'.format(host, reverse('payment_failed')),
+        }
+    form = PayPalPaymentsForm(initial=paypal_dict)
+    """if request.method == 'POST':
         order_form = OrderForm(request.POST)
         if order_form.is_valid():
             # save the Order
@@ -96,10 +105,12 @@ def order(request, pk):
             return redirect('payment_method')
     else:
         order_form = OrderForm()
+        """
     context = {
-        'order': order_form,
+        #'order': order_form,
         'shipping_info': shipping_infomation,
         'quantity': quantity,
+        'form': form,
         
     }
     return render(request, 'order/order.html', context)
@@ -127,9 +138,14 @@ def payment_method(request):
 
 
 @login_required
-def payment_success(request):
+def payment_success(request, pk):
     cart = CartModel.objects.get(user=request.user)
-    if request.method == 'POST':
+    order = OrderModel(user=request.user, shipping=ShippingInformation.objects.get(id=pk), total_price=cart.total_price())
+    order.save()
+    for i in cart.product.all():
+        order.add_items(i.id)
+        cart.remove_from_cart(i.id)
+    """if request.method == 'POST':
         shipping_form = ShippingForm(request.POST)
         if shipping_form.is_valid():
             # save the shipping information
@@ -144,12 +160,12 @@ def payment_success(request):
             return redirect('order_complete')
     else:
         shipping_form = ShippingForm()
-
+"""
     context = {
-        'sh_f' : shipping_form,
+        #'sh_f' : shipping_form,
         'cart': cart,
     }
-    return render(request, 'order/checkout.html', context)
+    return render(request, 'order/order_complete.html', context)
 
 @login_required
 def payment_cancelled(request):

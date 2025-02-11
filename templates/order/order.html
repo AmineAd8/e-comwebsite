@@ -59,11 +59,12 @@
                     </div>
                     {% endfor%}
                     <h3>Total : {{request.user.cartmodel.total_price}}$</h3>
-                    <form method="POST">
+                    <!-- <form method="POST">
                         {%csrf_token%}
                         {{order|crispy}}
                         <input class="btn btn-primary" type="submit" value="Order">
-                    </form>
+                    </form> -->
+                    {{form.render}}
                     </div>
                 </div>
                  
