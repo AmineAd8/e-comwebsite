@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+#load our envirenemtal variabes
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,6 +31,7 @@ SECRET_KEY = 'django-insecure-i%i$fn-asypakp9=o09mijxf3h_1%f4&y$dgj&h4n$99$m(^cg
 DEBUG = True
 
 ALLOWED_HOSTS = []
+CSRF_TRUSTED_ORIGINS=[]
 
 
 # Application definition
@@ -44,6 +50,7 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_bootstrap4",
     'paypal.standard.ipn',
+    'whitenoise.runserver_nostatic',
 ]
 
 MIDDLEWARE = [
@@ -54,6 +61,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',    
 ]
 
 ROOT_URLCONF = 'e_commerce.urls'
@@ -82,8 +90,14 @@ WSGI_APPLICATION = 'e_commerce.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        #'ENGINE': 'django.db.backends.sqlite3',
+        #'NAME': BASE_DIR / 'db.sqlite3',
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "railway",
+        "USER": "postgres",
+        "PASSWORD": os.environ.get("DB_PASSWORD"),
+        "HOST": "mainline.proxy.rlwy.net",
+        "PORT": "26080",
     }
 }
 
@@ -131,6 +145,9 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 STATIC_ROOT = BASE_DIR / 'asset'
 
+#white noise static stuff
+STATICFILES_STORAG="whitenoise.storage.CompressedManifestStaticFilesStorage"
+
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 
@@ -145,8 +162,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'blogapp767@gmail.com'
-EMAIL_HOST_PASSWORD = 'acig rujg jtwe wmst'
+EMAIL_HOST_USER = os.environ.get("Email_Address")
+EMAIL_HOST_PASSWORD = os.environ.get("Email_Password")
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
@@ -154,4 +171,4 @@ EMAIL_USE_TLS = True
 # using the sandbox 
 PAYPAL_TEST = True
 
-PAYPAL_RECEIVER_EMAIL = "mybusiness2test@business.com"
+PAYPAL_RECEIVER_EMAIL = os.environ.get("Paypal_Email")

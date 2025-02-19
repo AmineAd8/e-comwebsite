@@ -5,11 +5,12 @@ from django.contrib.auth.models import User
 from django.core.validators import FileExtensionValidator
 from seller.models import ProductModel
 from users.models import Quantity
+from django.utils import timezone
 
 # Create your models here.
 class OrderItemModel(models.Model):
     title = models.CharField(max_length=100)
-    quantity = models.PositiveIntegerField(max_length=1000)
+    quantity = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     image = models.ImageField(upload_to='product_img', validators=[FileExtensionValidator(['png', 'jpg'])])
     
@@ -35,7 +36,8 @@ class OrderModel(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     shipping = models.ForeignKey(ShippingInformation, on_delete=models.CASCADE)
     items = models.ManyToManyField(OrderItemModel)
-    total_price = models.DecimalField(max_digits=10000, decimal_places=2)
+    total_price = models.DecimalField(max_digits=20, decimal_places=2)
+    date = models.DateTimeField(default=timezone.now)
 
     def add_items(self, product_id):
         product = ProductModel.objects.get(id=product_id)

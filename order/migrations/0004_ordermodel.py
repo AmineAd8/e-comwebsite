@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
             name='OrderModel',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('total_price', models.DecimalField(decimal_places=2, max_digits=10000)),
+                ('total_price', models.DecimalField(decimal_places=2, max_digits=10)),
                 ('items', models.ManyToManyField(to='order.orderitemmodel')),
                 ('shipping', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='order.shippinginformation')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),

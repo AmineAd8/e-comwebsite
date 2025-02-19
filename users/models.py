@@ -13,7 +13,7 @@ class Quantity(models.Model):
 
 class CartModel(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    product = models.ManyToManyField(ProductModel, blank=True, null=True)
+    product = models.ManyToManyField(ProductModel)
 
     def __str__(self):
         return self.user.username + 'Cart'
