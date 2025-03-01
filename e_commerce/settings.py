@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+import dj_database_url
 
 #load our envirenemtal variabes
 load_dotenv()
@@ -89,16 +90,15 @@ WSGI_APPLICATION = 'e_commerce.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+        'default': dj_database_url.config(default=os.environ.get("DATABASE_URL")),
         #'ENGINE': 'django.db.backends.sqlite3',
         #'NAME': BASE_DIR / 'db.sqlite3',
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "railway",
-        "USER": "postgres",
-        "PASSWORD": os.environ.get("DB_PASSWORD"),
-        "HOST": "mainline.proxy.rlwy.net",
-        "PORT": "26080",
-    }
+        #"ENGINE": "django.db.backends.postgresql",
+        #"NAME": "webdb_0ig7",
+        #"USER": "postgresdb",
+        #"PASSWORD": os.environ.get("DB_PASSWORD"),
+        #"HOST": "dpg-cv0te5q3esus73aqqbbg-a",
+        #"PORT": "5432",
 }
 
 
